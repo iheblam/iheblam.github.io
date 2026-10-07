@@ -17,7 +17,9 @@ function savePreference(key, value) { try { localStorage.setItem(key, value); } 
 function updateControls() {
   languageButton.textContent = language === 'en' ? 'FR' : 'EN';
   languageButton.setAttribute('aria-label', language === 'en' ? 'Switch to French' : 'Passer en anglais');
-  themeButton.textContent = theme === 'dark' ? '☀' : '☾';
+  themeButton.innerHTML = theme === 'dark'
+    ? '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4L19 5"/></svg>'
+    : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 13.3A8.5 8.5 0 0 1 10.7 3.5a8.5 8.5 0 1 0 9.8 9.8Z"/></svg>';
   themeButton.setAttribute('aria-label', language === 'fr' ? (theme === 'dark' ? 'Activer le thème clair' : 'Activer le thème sombre') : (theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'));
   themeButton.setAttribute('aria-pressed', String(theme === 'dark'));
 }
@@ -50,13 +52,30 @@ document.getElementById('year').textContent = new Date().getFullYear();
 const canvas = document.getElementById('data-background');
 const context = canvas.getContext('2d');
 const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+const motionButton = document.createElement('button');
+motionButton.className = 'motion-toggle';
+document.querySelector('.hero-foot').append(motionButton);
+let motionOverride = readPreference('portfolio-motion');
+function motionEnabled() { return motionOverride ? motionOverride === 'enabled' : !motionPreference.matches; }
+function updateMotionControl() {
+  const enabled = motionEnabled();
+  document.documentElement.dataset.motion = enabled ? 'enabled' : 'paused';
+  motionButton.textContent = language === 'fr' ? (enabled ? 'Mettre en pause' : 'Activer les animations') : (enabled ? 'Pause animation' : 'Enable animation');
+  motionButton.setAttribute('aria-pressed', String(enabled));
+}
+motionButton.addEventListener('click', () => {
+  motionOverride = motionEnabled() ? 'paused' : 'enabled';
+  savePreference('portfolio-motion', motionOverride);
+  syncMotion();
+});
+languageButton.addEventListener('click', updateMotionControl);
 let points = [], width = 0, height = 0, animationFrame = 0, lastFrame = 0;
 function resizeBackground() {
   width = innerWidth; height = innerHeight;
   const scale = Math.min(devicePixelRatio || 1, 2);
   canvas.width = width * scale; canvas.height = height * scale;
   context.setTransform(scale, 0, 0, scale, 0, 0);
-  points = Array.from({length: width < 600 ? 23 : 48}, () => ({x:Math.random()*width,y:Math.random()*height,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18,r:Math.random()*1.4+1}));
+  points = Array.from({length: width < 600 ? 23 : 65}, () => ({x:Math.random()*width,y:Math.random()*height,vx:(Math.random()-.5)*.7,vy:(Math.random()-.5)*.7,r:Math.random()*1.4+1}));
   paintBackground(false);
 }
 function paintBackground(move) {
@@ -80,8 +99,9 @@ function animateBackground(time){
 }
 function syncMotion(){
   cancelAnimationFrame(animationFrame);
+  updateMotionControl();
   paintBackground(false);
-  if(!motionPreference.matches && !document.hidden) animationFrame=requestAnimationFrame(animateBackground);
+  if(motionEnabled() && !document.hidden) animationFrame=requestAnimationFrame(animateBackground);
 }
 addEventListener('resize',resizeBackground);
 document.addEventListener('visibilitychange',syncMotion);
