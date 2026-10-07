@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="68" viewBox="0 0 280 68" role="img" aria-labelledby="title">
+<title id="title">Iheb Lamouchi</title>
+<g fill="none" stroke="#6255db" stroke-width="2.4" stroke-linecap="round"><path d="M8 34 22 18 38 34 22 50Z"/><path d="M8 34h30M22 18v32" opacity=".5"/></g>
+<g fill="#6255db"><circle cx="8" cy="34" r="3.5"/><circle cx="22" cy="18" r="3.5"/><circle cx="38" cy="34" r="3.5"/><circle cx="22" cy="50" r="3.5"/></g>
+<text x="55" y="29" fill="#172442" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing=".3">Iheb Lamouchi</text>
+<text x="56" y="49" fill="#4c5c78" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="700" letter-spacing="2.6">DATA SCIENCE &amp; AI</text>
+</svg>
