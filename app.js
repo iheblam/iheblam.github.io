@@ -26,6 +26,10 @@ function setLanguage(value) {
   document.documentElement.lang = language;
   const dictionary = language === 'fr' ? french : english;
   elements.forEach(el => { el.innerHTML = dictionary[el.dataset.i18n] ?? english[el.dataset.i18n]; });
+  document.querySelectorAll('a[data-i18n="cv"]').forEach(link => {
+    link.href = language === 'fr' ? 'assets/Iheb-Lamouchi-CV-FR.pdf' : 'assets/Iheb-Lamouchi-CV.pdf';
+    link.download = language === 'fr' ? 'Iheb-Lamouchi-CV-FR.pdf' : 'Iheb-Lamouchi-CV-EN.pdf';
+  });
   document.querySelector('nav').setAttribute('aria-label', language === 'fr' ? 'Navigation principale' : 'Main navigation');
   document.title = language === 'fr' ? 'Iheb Lamouchi · Data et IA' : 'Iheb Lamouchi · Data & AI';
   updateControls();
